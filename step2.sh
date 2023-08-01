@@ -291,17 +291,22 @@ $LFS_SUDO mkdir -pv $LFS/proc
 $LFS_SUDO mkdir -pv $LFS/sys
 $LFS_SUDO mkdir -pv $LFS/run
 
-$LFS_SUDO mount -v --bind /dev $LFS/dev
-$LFS_SUDO mount -v --bind /dev/pts $LFS/dev/pts
-$LFS_SUDO mount -vt proc proc $LFS/proc
-$LFS_SUDO mount -vt sysfs sysfs $LFS/sys
-$LFS_SUDO mount -vt tmpfs tmpfs $LFS/run
+# $LFS_SUDO mount -v --bind /dev $LFS/dev
+# $LFS_SUDO mount -v --bind /dev/pts $LFS/dev/pts
+# $LFS_SUDO mount -vt proc proc $LFS/proc
+# $LFS_SUDO mount -vt sysfs sysfs $LFS/sys
+# $LFS_SUDO mount -vt tmpfs tmpfs $LFS/run
 
-if [ -h $LFS/dev/shm ]; then
-  $LFS_SUDO mkdir -pv $LFS/$(readlink $LFS/dev/shm)
-else
-  $LFS_SUDO mount -t tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
-fi
+# if [ -h $LFS/dev/shm ]; then
+#  $LFS_SUDO mkdir -pv $LFS/$(readlink $LFS/dev/shm)
+# else
+#  $LFS_SUDO mount -t tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
+# fi
+
+$LFS_SUDO ln -vs /dev $LFS/dev
+$LFS_SUDO ln -vs /proc $LFS/proc
+$LFS_SUDO ln -vs /sys $LFS/sys
+$LFS_SUDO ln -vs /run $LFS/run
 
 $LFS_SUDO chroot "$LFS" /usr/bin/env -i   \
     HOME=/root                  \
