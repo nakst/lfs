@@ -9,8 +9,6 @@ export LFS=`realpath $LFS`
 export LFS_SOURCES=`realpath $LFS_SOURCES`
 export LFS_USER=`whoami`
 
-$LFS_SUDO pacman -S --needed base-devel python
-
 $LFS_SUDO mkdir -pv $LFS/etc
 $LFS_SUDO mkdir -pv $LFS/var
 $LFS_SUDO mkdir -pv $LFS/lib64
