@@ -277,33 +277,33 @@ ln -sv gcc $LFS/usr/bin/cc
 cd ../..
 rm -rf gcc-12.2.0
 
-sudo chown -R root:root $LFS/etc
-sudo chown -R root:root $LFS/var
-sudo chown -R root:root $LFS/lib64
-sudo chown -R root:root $LFS/tools
-sudo chown -R root:root $LFS/bin
-sudo chown -R root:root $LFS/lib
-sudo chown -R root:root $LFS/sbin
-sudo chown -R root:root $LFS/usr
+$LFS_SUDO chown -R root:root $LFS/etc
+$LFS_SUDO chown -R root:root $LFS/var
+$LFS_SUDO chown -R root:root $LFS/lib64
+$LFS_SUDO chown -R root:root $LFS/tools
+$LFS_SUDO chown -R root:root $LFS/bin
+$LFS_SUDO chown -R root:root $LFS/lib
+$LFS_SUDO chown -R root:root $LFS/sbin
+$LFS_SUDO chown -R root:root $LFS/usr
 
-sudo mkdir -pv $LFS/dev
-sudo mkdir -pv $LFS/proc
-sudo mkdir -pv $LFS/sys
-sudo mkdir -pv $LFS/run
+$LFS_SUDO mkdir -pv $LFS/dev
+$LFS_SUDO mkdir -pv $LFS/proc
+$LFS_SUDO mkdir -pv $LFS/sys
+$LFS_SUDO mkdir -pv $LFS/run
 
-sudo mount -v --bind /dev $LFS/dev
-sudo mount -v --bind /dev/pts $LFS/dev/pts
-sudo mount -vt proc proc $LFS/proc
-sudo mount -vt sysfs sysfs $LFS/sys
-sudo mount -vt tmpfs tmpfs $LFS/run
+$LFS_SUDO mount -v --bind /dev $LFS/dev
+$LFS_SUDO mount -v --bind /dev/pts $LFS/dev/pts
+$LFS_SUDO mount -vt proc proc $LFS/proc
+$LFS_SUDO mount -vt sysfs sysfs $LFS/sys
+$LFS_SUDO mount -vt tmpfs tmpfs $LFS/run
 
 if [ -h $LFS/dev/shm ]; then
-  sudo mkdir -pv $LFS/$(readlink $LFS/dev/shm)
+  $LFS_SUDO mkdir -pv $LFS/$(readlink $LFS/dev/shm)
 else
-  sudo mount -t tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
+  $LFS_SUDO mount -t tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
 fi
 
-sudo chroot "$LFS" /usr/bin/env -i   \
+$LFS_SUDO chroot "$LFS" /usr/bin/env -i   \
     HOME=/root                  \
     TERM="$TERM"                \
     PS1='(lfs chroot) \u:\w\$ ' \
