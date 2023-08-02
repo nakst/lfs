@@ -7,5 +7,12 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v3
+    - name: mountstuff
+      run: |
+        mkdir -p lfs
+        mount --bind /dev lfs/dev
+        mount --bind /proc lfs/proc
+        mount --bind /sys lfs/sys
+        mount --bind /run lfs/run
     - name: dockerbuild
       uses: ./docker

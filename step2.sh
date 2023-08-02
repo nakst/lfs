@@ -286,10 +286,10 @@ $LFS_SUDO chown -R root:root $LFS/lib
 $LFS_SUDO chown -R root:root $LFS/sbin
 $LFS_SUDO chown -R root:root $LFS/usr
 
-$LFS_SUDO mkdir -pv $LFS/dev
-$LFS_SUDO mkdir -pv $LFS/proc
-$LFS_SUDO mkdir -pv $LFS/sys
-$LFS_SUDO mkdir -pv $LFS/run
+# $LFS_SUDO mkdir -pv $LFS/dev
+# $LFS_SUDO mkdir -pv $LFS/proc
+# $LFS_SUDO mkdir -pv $LFS/sys
+# $LFS_SUDO mkdir -pv $LFS/run
 
 # $LFS_SUDO mount -v --bind /dev $LFS/dev
 # $LFS_SUDO mount -v --bind /dev/pts $LFS/dev/pts
@@ -303,10 +303,10 @@ $LFS_SUDO mkdir -pv $LFS/run
 #  $LFS_SUDO mount -t tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
 # fi
 
-$LFS_SUDO ln -vs /dev $LFS/dev
-$LFS_SUDO ln -vs /proc $LFS/proc
-$LFS_SUDO ln -vs /sys $LFS/sys
-$LFS_SUDO ln -vs /run $LFS/run
+# $LFS_SUDO ln -vs /dev $LFS/dev
+# $LFS_SUDO ln -vs /proc $LFS/proc
+# $LFS_SUDO ln -vs /sys $LFS/sys
+# $LFS_SUDO ln -vs /run $LFS/run
 
 $LFS_SUDO chroot "$LFS" /usr/bin/env -i   \
     HOME=/root                  \
