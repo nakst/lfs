@@ -9,7 +9,7 @@ jobs:
       uses: actions/checkout@v3
     - name: mountstuff
       run: |
-        mkdir -p lfs
+        mkdir -p lfs/{dev,proc,sys,run}
         mount --bind /dev lfs/dev
         mount --bind /proc lfs/proc
         mount --bind /sys lfs/sys
