@@ -10,9 +10,10 @@ jobs:
     - name: mountstuff
       run: |
         mkdir -p lfs/{dev,proc,sys,run}
-        mount --bind /dev lfs/dev
-        mount --bind /proc lfs/proc
-        mount --bind /sys lfs/sys
-        mount --bind /run lfs/run
+        sudo mount --bind /dev lfs/dev
+        sudo mount --bind /dev/pts lfs/dev/pts
+        sudo mount --bind /proc lfs/proc
+        sudo mount --bind /sys lfs/sys
+        sudo mount --bind /run lfs/run
     - name: dockerbuild
       uses: ./docker
