@@ -29,7 +29,7 @@ jobs:
         sudo rm lfs/step2.sh
         sudo rm lfs/step3.sh
         sudo rm lfs/linux_config
-        tar -caf lfs.tar.xz lfs
+        sudo tar -caf lfs.tar.xz lfs
     - name: release
       id: release
       uses: actions/create-release@v1
