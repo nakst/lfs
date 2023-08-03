@@ -40,7 +40,7 @@ $LFS_SUDO mkdir $LFS/sources
 $LFS_SUDO cp -vr $LFS_SOURCES $LFS/sources
 $LFS_SUDO chown -vR $LFS_USER $LFS/sources
 # su $LFS_USER - $LFS/step2.sh 
-$LFS/step2.sh 
+# $LFS/step2.sh 
 
 echo -------------------------------------------------
 echo You are now ready to install GRUB.

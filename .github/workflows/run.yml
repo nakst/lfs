@@ -17,3 +17,32 @@ jobs:
         sudo mount --bind /run lfs/run
     - name: dockerbuild
       uses: ./docker
+    - name: tarstuff
+      run: |
+        sudo umount lfs/dev/pts
+        sudo umount lfs/dev
+        sudo umount lfs/proc
+        sudo umount lfs/sys
+        sudo umount lfs/run
+        sudo rm -rf lfs/sources
+        sudo rm -rf sources
+        tar -caf lfs.tar.xz lfs
+    - name: release
+      id: release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: LFSBuildOutput
+        release_name: LFSBuildOutput
+        body: Autobuild.
+    - name: upload
+      id: upload
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.release.outputs.upload_url }}
+        asset_path: lfs.tar.xz
+        asset_name: lfs.tar.xz
+        asset_content_type: application/x-compressed
