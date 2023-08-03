@@ -1,0 +1,19 @@
+To install with GRUB:
+1. Create a fresh partition and mount it.
+2. Extract lfs.tar.xz onto the partition (remove the leading directory).
+3. Mount /dev, /proc, /sys and /run (see .github/workflows/run.yml).
+4. Modify /etc/fstab with your partition's UUID.
+5. Install GRUB with something like:
+       sudo chroot /mnt /usr/bin/env -i HOME=/root TERM="$TERM" PATH=/usr/bin:/usr/sbin grub-install /dev/sdX
+6. Create /boot/grub/grub.cfg with something like:
+	set default=0
+	set timeout=5
+
+	insmod ext2
+	search --set=root --fs-uuid ReplaceMeWithTheFileSystemUUID
+
+	menuentry "GNU/Linux, Linux 6.1.11-lfs-11.3" {
+		linux   /boot/vmlinuz-6.1.11-lfs-11.3 root=PARTUUID=ReplaceMeWithThePartitionUUID ro
+	}
+   Note that partition and file system UUIDs are different!
+7. Reboot and hope it works :)
