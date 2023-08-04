@@ -285,10 +285,10 @@ $LFS_SUDO chown -R root:root $LFS/bin
 $LFS_SUDO chown -R root:root $LFS/lib
 $LFS_SUDO chown -R root:root $LFS/sbin
 $LFS_SUDO chown -R root:root $LFS/usr
-$LFS_SUDO chown -R root:root $LFS/dev
-$LFS_SUDO chown -R root:root $LFS/proc
-$LFS_SUDO chown -R root:root $LFS/sys
-$LFS_SUDO chown -R root:root $LFS/run
+$LFS_SUDO chown root:root $LFS/dev
+$LFS_SUDO chown root:root $LFS/proc
+$LFS_SUDO chown root:root $LFS/sys
+$LFS_SUDO chown root:root $LFS/run
 
 # $LFS_SUDO mkdir -pv $LFS/dev
 # $LFS_SUDO mkdir -pv $LFS/proc
