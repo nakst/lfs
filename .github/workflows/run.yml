@@ -35,9 +35,8 @@ jobs:
         sudo umount lfs/sys
         sudo umount lfs/run
         sudo rm -rf lfs/sources
+        sudo rm -rf lfs/step3
         sudo rm -rf sources
-        sudo rm lfs/step2.sh
-        sudo rm lfs/step3.sh
         sudo rm lfs/linux_config
         sudo tar -caf lfs.tar.xz lfs
     - name: release
