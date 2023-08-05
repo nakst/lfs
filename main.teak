@@ -20,7 +20,7 @@ void Start() {
 	for str file in filesToCopy { assert FileCopy(file, "%lfs%/%file%"); }
 	for str file in DirectoryEnumerate(lfsSources):assert() { assert FileCopy("%lfsSources%/%file%", "%lfs%/sources/%file%"); }
 
-	assert SystemShellExecute("%lfs%/step2.sh");
+	assert SystemShellExecute("/bin/bash %lfs%/step2.sh");
 
 	Log("-------------------------------------------------");
 	Log("You are now ready to install GRUB.");

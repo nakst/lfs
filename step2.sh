@@ -1,5 +1,3 @@
-#!/bin/bash
-
 set +h
 set -eux
 test $LFS
@@ -36,7 +34,7 @@ mv -v mpc-1.3.1 mpc
 sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
 mkdir build
 cd build
-../configure                  --target=$LFS_TGT         --prefix=$LFS/tools       --with-glibc-version=2.37 --with-sysroot=$LFS       --with-newlib             --without-headers         --enable-default-pie      --enable-default-ssp      --disable-nls             --disable-shared          --disable-multilib        --disable-threads         --disable-libatomic       --disable-libgomp         --disable-libquadmath     --disable-libssp          --disable-libvtv          --disable-libstdcxx       --enable-languages=c,c++
+../configure --target=$LFS_TGT --prefix=$LFS/tools --with-glibc-version=2.37 --with-sysroot=$LFS --with-newlib --without-headers --enable-default-pie --enable-default-ssp --disable-nls --disable-shared --disable-multilib --disable-threads --disable-libatomic --disable-libgomp --disable-libquadmath --disable-libssp --disable-libvtv --disable-libstdcxx --enable-languages=c,c++
 make -j`nproc`
 make install
 cd ..
@@ -61,7 +59,7 @@ patch -Np1 -i ../glibc-2.37-fhs-1.patch
 mkdir -v build
 cd       build
 echo "rootsbindir=/usr/sbin" > configparms
-../configure                             --prefix=/usr                      --host=$LFS_TGT                    --build=$(../scripts/config.guess) --enable-kernel=3.2                --with-headers=$LFS/usr/include    libc_cv_slibdir=/usr/lib
+../configure --prefix=/usr --host=$LFS_TGT --build=$(../scripts/config.guess) --enable-kernel=3.2 --with-headers=$LFS/usr/include libc_cv_slibdir=/usr/lib
 make -j1
 make DESTDIR=$LFS install
 sed '/RTLDLIST=/s@/usr@@g' -i $LFS/usr/bin/ldd
@@ -73,7 +71,7 @@ tar -xaf gcc-12.2.0.tar.xz
 cd gcc-12.2.0
 mkdir build
 cd build
-../libstdc++-v3/configure           --host=$LFS_TGT                 --build=$(../config.guess)      --prefix=/usr                   --disable-multilib              --disable-nls                   --disable-libstdcxx-pch         --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/12.2.0
+../libstdc++-v3/configure --host=$LFS_TGT --build=$(../config.guess) --prefix=/usr --disable-multilib --disable-nls --disable-libstdcxx-pch --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/12.2.0
 make -j`nproc`
 make DESTDIR=$LFS install
 rm -v $LFS/usr/lib/lib{stdc++,stdc++fs,supc++}.la
@@ -82,7 +80,7 @@ rm -rf gcc-12.2.0
 
 tar -xaf m4-1.4.19.tar.xz
 cd m4-1.4.19
-./configure --prefix=/usr   --host=$LFS_TGT --build=$(build-aux/config.guess)
+./configure --prefix=/usr --host=$LFS_TGT --build=$(build-aux/config.guess)
 make -j`nproc`
 make DESTDIR=$LFS install
 cd ..
@@ -97,7 +95,7 @@ pushd build
 make -C include
 make -C progs tic
 popd
-./configure --prefix=/usr                --host=$LFS_TGT              --build=$(./config.guess)    --mandir=/usr/share/man      --with-manpage-format=normal --with-shared                --without-normal             --with-cxx-shared            --without-debug              --without-ada                --disable-stripping          --enable-widec
+./configure --prefix=/usr --host=$LFS_TGT --build=$(./config.guess) --mandir=/usr/share/man --with-manpage-format=normal --with-shared --without-normal --with-cxx-shared  --without-debug --without-ada --disable-stripping --enable-widec
 make -j`nproc`
 make DESTDIR=$LFS TIC_PATH=$(pwd)/build/progs/tic install
 echo "INPUT(-lncursesw)" > $LFS/usr/lib/libncurses.so
@@ -137,7 +135,7 @@ tar -xaf file-5.44.tar.gz
 cd file-5.44
 mkdir build
 pushd build
-../configure --disable-bzlib      --disable-libseccomp --disable-xzlib      --disable-zlib
+../configure --disable-bzlib --disable-libseccomp --disable-xzlib --disable-zlib
 make
 popd
 ./configure --prefix=/usr --host=$LFS_TGT --build=$(./config.guess)
