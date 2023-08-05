@@ -20,6 +20,11 @@ jobs:
         sudo mount --bind /proc lfs/proc
         sudo mount --bind /sys lfs/sys
         sudo mount --bind /run lfs/run
+        git clone https://github.com/nakst/teak.git
+        cd teak
+        gcc -o teak teak.c -pthread -ldl
+        ./teak build.teak
+        cd ..
     - name: dockerbuild
       uses: ./docker
     - name: tarstuff
