@@ -2,6 +2,12 @@
 // TODO Updating the eudev database after install?
 // TODO Convert step3.sh to a teak script.
 // TODO Tracking what files are installed.
+// TODO umask 022?
+
+// TODO The following test suites are not run because they contains failures:
+// 		glibc, binutils, gcc, libtool, automake, elfutils, coreutils, tar, procps-ng, 
+//		util-linux, e2fsprogs, eudev, attr (needs extended attribute support), inetutils, vim
+//	Make a log of which failures occur for inspection.
 
 str lfs #option;
 str lfsSources #option;
@@ -16,13 +22,13 @@ void Start() {
 	SystemSetEnvironmentVariable("LFS", lfs);
 	assert PathSetDefaultPrefixToScriptSourceDirectory();
 
-	str[] directoriesToCreate = [ "/etc", "/var", "/lib64", "/tools", "/usr/bin", "/usr/lib", "/usr/sbin", "/sources" ];
+	str[] directoriesToCreate = [ "/etc", "/var", "/lib64", "/tools", "/usr/bin", "/usr/lib", "/usr/sbin", "/sources", "/step3" ];
 	for str directory in directoriesToCreate { assert PathCreateLeadingDirectories(lfs + directory); }
 	str[] userLinksToCreate = [ "/bin", "/lib", "/sbin" ];
 	for str userLink in userLinksToCreate { assert SystemShellExecute("ln -s usr%userLink% %lfs%%userLink%"); }
-	str[] filesToCopy = [ "step3.sh", "linux_config" ];
-	for str file in filesToCopy { assert FileCopy(file, "%lfs%/%file%"); }
+	assert FileCopy("linux_config", "%lfs%/linux_config");
 	for str file in DirectoryEnumerate(lfsSources):assert() { assert FileCopy("%lfsSources%/%file%", "%lfs%/sources/%file%"); }
+	for str file in DirectoryEnumerate("step3"):assert() { assert FileCopy("step3/%file%", "%lfs%/step3/%file%"); }
 
 	SystemSetEnvironmentVariable("LC_ALL", "POSIX");
 	SystemSetEnvironmentVariable("LFS_TGT", StringRemoveOptionalSuffix(SystemShellEvaluate("uname -m"), "\n") + "-lfs-linux-gnu");
@@ -32,15 +38,30 @@ void Start() {
 	str[] step2Scripts = [ "binutils.sh", "gcc.sh", "linux.sh", "glibc.sh", "libstdcpp.sh", "m4.sh", "ncurses.sh", 
 		"bash.sh", "coreutils.sh", "diffutils.sh", "file.sh", "findutils.sh", "gawk.sh", "grep.sh", "gzip.sh", 
 		"make.sh", "patch.sh", "sed.sh", "tar.sh", "xz.sh", "binutils2.sh", "gcc2.sh" ];
-	for str script in step2Scripts { assert SystemShellExecuteWithWorkingDirectory("%lfsSources%", "/bin/bash " + PathToAbsolute("step2/%script%")); }
+
+	for str script in step2Scripts { 
+		assert SystemShellExecuteWithWorkingDirectory("%lfsSources%", "/bin/bash -e " + PathToAbsolute("step2/%script%")); 
+	}
 
 	str[] directoriesToChownR = [ "/etc", "/var", "/lib64", "/tools", "/bin", "/lib", "/sbin", "/usr" ];
 	for str directory in directoriesToChownR { assert SystemShellExecute("chown -R root:root $LFS%directory%"); }
 	str[] directoriesToChown = [ "/dev", "/proc", "/sys", "/run" ];
 	for str directory in directoriesToChown { assert SystemShellExecute("chown root:root $LFS%directory%"); }
 
-	assert SystemShellExecute("chroot \"%lfs%\" /usr/bin/env -i HOME=/root TERM=\"$TERM\" PS1='(lfs chroot) ' PATH=/usr/bin:/usr/sbin "
-		+ "/bin/bash --login /step3.sh");
+	str[] step3Scripts = [ "prep.sh", "gettext.sh", "bison.sh", "perl.sh", "python.sh", "texinfo.sh", "util-linux.sh", "cleanup-tools.sh", 
+		"man-pages.sh", "iana.sh", "glibc.sh", "tzdata.sh", "ldconf.sh", "zlib.sh", "bzip2.sh", "xz.sh", "zstd.sh", "file.sh", "readline.sh",
+		"m4.sh", "bc.sh", "flex.sh", "tcl.sh", "expect.sh", "dejagnu.sh", "binutils.sh", "gmp.sh", "mpfr.sh", "mpc.sh", "attr.sh", "acl.sh",
+		"libcap.sh", "shadow.sh", "gcc.sh", "pkg-config.sh", "ncurses.sh", "sed.sh", "psmisc.sh", "gettext2.sh", "bison2.sh", "grep.sh",
+		"bash.sh", "libtool.sh", "gdbm.sh", "gperf.sh", "expat.sh", "inetutils.sh", "less.sh", "perl2.sh", "xml-parser.sh", "intltool.sh",
+		"autoconf.sh", "automake.sh", "openssl.sh", "kmod.sh", "elfutils.sh", "libffi.sh", "python2.sh", "wheel.sh", "ninja.sh", "meson.sh",
+		"coreutils.sh", "check.sh", "diffutils.sh", "gawk.sh", "findutils.sh", "groff.sh", "grub.sh", "gzip.sh", "iproute.sh", "kbd.sh",
+		"libpipeline.sh", "make.sh", "patch.sh", "tar.sh", "texinfo2.sh", "vim.sh", "eudev.sh", "mandb.sh", "procps.sh", "util-linux2.sh",
+		"e2fsprogs.sh", "sysklogd.sh", "sysvinit.sh", "cleanup-tester.sh", "lfs-bootscripts.sh", "config-files.sh", "linux.sh" ];
+
+	for str script in step3Scripts { 
+		assert SystemShellExecute("chroot \"%lfs%\" /usr/bin/env --chdir=/sources --ignore-environment "
+				+ "HOME=/root TERM=\"$TERM\" PS1='(lfs chroot) ' PATH=/usr/bin:/usr/sbin /bin/bash --login -e /step3/%script%"); 
+	}
 
 	Log("-------------------------------------------------");
 	Log("You are now ready to install GRUB.");
