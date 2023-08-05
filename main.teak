@@ -32,7 +32,7 @@ void Start() {
 	str[] step2Scripts = [ "binutils.sh", "gcc.sh", "linux.sh", "glibc.sh", "libstdcpp.sh", "m4.sh", "ncurses.sh", 
 		"bash.sh", "coreutils.sh", "diffutils.sh", "file.sh", "findutils.sh", "gawk.sh", "grep.sh", "gzip.sh", 
 		"make.sh", "patch.sh", "sed.sh", "tar.sh", "xz.sh", "binutils2.sh", "gcc2.sh" ];
-	for str script in step2Scripts { assert SystemShellExecuteWithWorkingDirectory("%lfsSources%", "/bin/bash step2/%script%"); }
+	for str script in step2Scripts { assert SystemShellExecuteWithWorkingDirectory("%lfsSources%", "/bin/bash " + PathToAbsolute("step2/%script%")); }
 
 	str[] directoriesToChownR = [ "/etc", "/var", "/lib64", "/tools", "/bin", "/lib", "/sbin", "/usr" ];
 	for str directory in directoriesToChownR { assert SystemShellExecute("chown -R root:root $LFS%directory%"); }
