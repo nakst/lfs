@@ -1,0 +1,28 @@
+// TODO Skipped a lot of 9.5 (networking)
+// TODO Updating the eudev database after install?
+
+str lfs #option;
+str lfsSources #option;
+
+void Start() {
+	assert PathSetDefaultPrefixToScriptSourceDirectory();
+	assert lfs != "";
+	assert lfsSources != "";
+
+	lfs = PathToAbsolute(lfs);
+	assert !StringContains(lfs, " ");
+
+	str[] directoriesToCreate = [ "/etc", "/var", "/lib64", "/tools", "/usr/bin", "/usr/lib", "/usr/sbin", "/sources" ];
+	for str directory in directoriesToCreate { assert PathCreateLeadingDirectories(lfs + directory); }
+	str[] userLinksToCreate = [ "/bin", "/lib", "/sbin" ];
+	for str userLink in userLinksToCreate { assert SystemShellExecute("ln -s usr%userLink% %lfs%%userLink%"); }
+	str[] filesToCopy = [ "step2.sh", "step3.sh", "linux_config" ];
+	for str file in filesToCopy { assert FileCopy(file, "%lfs%/%file%"); }
+	for str file in DirectoryEnumerate(lfsSources):assert() { assert FileCopy("%lfsSources%/%file%", "%lfs%/sources/%file%"); }
+
+	assert SystemShellExecute("%lfs%/step2.sh");
+
+	Log("-------------------------------------------------");
+	Log("You are now ready to install GRUB.");
+	Log("You will need to update the fstab file with the partition used.");
+}
