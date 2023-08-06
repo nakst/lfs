@@ -1,6 +1,5 @@
 // TODO Skipped a lot of 9.5 (networking)
 // TODO Updating the eudev database after install?
-// TODO Convert step3.sh to a teak script.
 // TODO Tracking what files are installed.
 // TODO umask 022?
 
@@ -22,7 +21,7 @@ void Start() {
 	SystemSetEnvironmentVariable("LFS", lfs);
 	assert PathSetDefaultPrefixToScriptSourceDirectory();
 
-	str[] directoriesToCreate = [ "/etc", "/var", "/lib64", "/tools", "/usr/bin", "/usr/lib", "/usr/sbin", "/sources", "/step3" ];
+	str[] directoriesToCreate = [ "/etc", "/var", "/lib64", "/tools", "/usr/bin", "/usr/lib", "/usr/sbin", "/sources", "/step3", "/buildlog" ];
 	for str directory in directoriesToCreate { assert PathCreateLeadingDirectories(lfs + directory); }
 	str[] userLinksToCreate = [ "/bin", "/lib", "/sbin" ];
 	for str userLink in userLinksToCreate { assert SystemShellExecute("ln -s usr%userLink% %lfs%%userLink%"); }
@@ -40,7 +39,8 @@ void Start() {
 		"make.sh", "patch.sh", "sed.sh", "tar.sh", "xz.sh", "binutils2.sh", "gcc2.sh" ];
 
 	for str script in step2Scripts { 
-		assert SystemShellExecuteWithWorkingDirectory("%lfsSources%", "/bin/bash -e " + PathToAbsolute("step2/%script%")); 
+		assert SystemShellExecuteWithWorkingDirectory("%lfs%/sources", "/bin/bash -e " + PathToAbsolute("step2/%script%")
+				+ " 2> %lfs%/buildlog/step2_%script%_stderr.txt > %lfs%/buildlog/step2_%script%_stdout.txt");
 	}
 
 	str[] directoriesToChownR = [ "/etc", "/var", "/lib64", "/tools", "/bin", "/lib", "/sbin", "/usr" ];
@@ -60,7 +60,8 @@ void Start() {
 
 	for str script in step3Scripts { 
 		assert SystemShellExecute("chroot \"%lfs%\" /usr/bin/env --chdir=/sources --ignore-environment "
-				+ "HOME=/root TERM=\"$TERM\" PS1='(lfs chroot) ' PATH=/usr/bin:/usr/sbin /bin/bash --login -e /step3/%script%"); 
+				+ "HOME=/root TERM=\"$TERM\" PS1='(lfs chroot) ' PATH=/usr/bin:/usr/sbin /bin/bash --login -e /step3/%script%"
+				+ " 2> %lfs%/buildlog/step3_%script%_stderr.txt > %lfs%/buildlog/step3_%script%_stdout.txt");
 	}
 
 	Log("-------------------------------------------------");
